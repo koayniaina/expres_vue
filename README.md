@@ -6,3 +6,7 @@ install npm
 PORT = 5000
 
 MONGO_URI = mongodb+srv://setraniaina08_db_user:PJnjV8eWKgp0NYMj@cluster1.1zufaxt.mongodb.net/API?retryWrites=true&w=majority&appName=Cluster1
+
+
+<!-- JWT SECRET -->
+JWT_SECRET = 123456

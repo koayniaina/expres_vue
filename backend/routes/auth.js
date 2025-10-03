@@ -1,7 +1,8 @@
 import express from "express";
 const router = express.Router();
-
-import User from "../models/UserModel";
+import jwt from "jsonwebtoken";
+import User from "../models/User.js";
+import { protect } from "../middleware/auth.js";
 
 router.post("/register", async (req, res) => {
   const { username, email, password } = req.body;
@@ -28,12 +29,15 @@ router.post("/register", async (req, res) => {
       email,
       password,
     });
-
+    const token = generateToken(user._id);
     // Réponse
     res.status(201).json({
       id: user._id,
       username: user.username,
       email: user.email,
+      token,
+     
+      
     });
   } catch (err) {
     console.error(err);
@@ -60,10 +64,12 @@ router.post("/login", async (req, res) => {
         message: "Invalid credentials",
       });
     }
+    const token = generateToken(user._id);
     res.status(200).json({
       id: user._id,
       username: user.username,
       email: user.email,
+      token
     });
   } catch (error) {
     console.error(err);
@@ -74,9 +80,24 @@ router.post("/login", async (req, res) => {
 });
 
 
-// router.get("/me", protect ,  async (req, res) => {
+router.get("/me", protect ,  async (req, res) => {
+  res.status(200).json(req.user);
+});
 
-// });
+
+// const generateToken =(id) =>{
+//   return jwt.sign({ id }, process.env.JWT_SECRET, {
+//     expiresIn: "30d",
+//   });
+  
+// }
+
+const generateToken = (id) => {
+  if (!process.env.JWT_SECRET) {
+    throw new Error("JWT_SECRET is not defined in .env");
+  }
+  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "30d" });
+};
 
 
 export default router;
