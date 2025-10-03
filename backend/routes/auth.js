@@ -84,14 +84,6 @@ router.get("/me", protect ,  async (req, res) => {
   res.status(200).json(req.user);
 });
 
-
-// const generateToken =(id) =>{
-//   return jwt.sign({ id }, process.env.JWT_SECRET, {
-//     expiresIn: "30d",
-//   });
-  
-// }
-
 const generateToken = (id) => {
   if (!process.env.JWT_SECRET) {
     throw new Error("JWT_SECRET is not defined in .env");
